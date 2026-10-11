@@ -82,6 +82,581 @@
             <a href="mony.html" class="nav-card">المالية</a>
             <a href="expor.html" class="nav-card">التصدير</a>
         </div>
+        <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Factory | المنصة الاحترافية لبناء التطبيقات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #080c14; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-[#080c14] text-slate-100 h-screen flex overflow-hidden">
+
+    <!-- نظام الإشعارات اللحظية (Toasts Container) -->
+    <div id="toast-container" class="fixed top-5 left-5 z-50 flex flex-col gap-2"></div>
+
+    <!-- القائمة الجانبية (Sidebar) -->
+    <aside class="w-64 bg-[#05080e] border-l border-slate-800/80 flex flex-col justify-between z-20 select-none">
+        <div>
+            <!-- شعار المنصة -->
+            <div class="p-4 border-b border-slate-800/80 flex items-center justify-between">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="bg-gradient-to-tr from-indigo-600 via-indigo-500 to-cyan-400 text-white p-2.5 rounded-2xl text-base shadow-lg shadow-cyan-500/10">
+                        <i class="fa-solid fa-cube"></i>
+                    </div>
+                    <div>
+                        <span class="font-black tracking-wider text-sm text-white block">APP FACTORY</span>
+                        <span class="text-[9px] text-cyan-400 font-medium">Enterprise AI Builder</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- روابط التنقل -->
+            <div class="p-3 space-y-1 text-sm font-medium">
+                <a href="#" onclick="switchTab('home')" id="nav-home" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-slate-800/60 text-white transition">
+                    <i class="fa-solid fa-house text-cyan-400 w-5"></i> الرئيسية | Home
+                </a>
+                <a href="#" onclick="switchTab('workspace')" id="nav-workspace" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900 transition">
+                    <i class="fa-solid fa-laptop-code text-indigo-400 w-5"></i> بيئة العمل | Workspace
+                </a>
+                <a href="#" onclick="switchTab('projects')" id="nav-projects" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900 transition">
+                    <i class="fa-solid fa-folder-open text-amber-400 w-5"></i> مشاريعي | Projects
+                </a>
+                <a href="#" onclick="switchTab('pricing')" id="nav-pricing" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900 transition">
+                    <i class="fa-solid fa-crown text-emerald-400 w-5"></i> الباقات والاشتراك | Pricing
+                </a>
+
+                <!-- لوحة التحكم للـ Admin (تظهر لبريد الأدمن فقط) -->
+                <div id="admin-menu-item" class="hidden pt-3 mt-3 border-t border-slate-800/80">
+                    <span class="text-[10px] text-rose-400 font-bold px-3 uppercase tracking-wider">منطقة المسؤول</span>
+                    <a href="#" onclick="switchTab('admin')" id="nav-admin" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-rose-400 hover:bg-rose-950/30 font-bold transition mt-1">
+                        <i class="fa-solid fa-user-shield w-5"></i> لوحة الأدمن | Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- أسفل القائمة الجانبية (بيانات البريد والاشتراك) -->
+        <div class="p-3 border-t border-slate-800/80 bg-[#030509]">
+            <div class="mb-3 px-1">
+                <label class="block text-[10px] text-slate-400 mb-1 font-medium">تسجيل الدخول الحالي:</label>
+                <input type="email" id="user-email-input" oninput="handleEmailInput()" class="w-full bg-slate-950 border border-slate-800/80 rounded-xl px-2.5 py-1.5 text-xs text-cyan-300 focus:outline-none focus:border-cyan-500 font-mono">
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-[10px] text-slate-400">نوع الاشتراك:</span>
+                    <span class="text-[10px] font-bold" id="user-plan-badge">باقة مجانية | Free</span>
+                </div>
+            </div>
+            <button onclick="switchTab('pricing')" class="w-full bg-gradient-to-r from-indigo-600 to-cyan-500 text-white text-xs font-bold py-2.5 rounded-xl shadow-lg shadow-indigo-500/10 hover:opacity-95 transition">
+                ترقية للـ Business 🚀
+            </button>
+        </div>
+    </aside>
+
+    <!-- المحتوى الرئيسي (Main Content) -->
+    <main class="flex-1 flex flex-col h-full bg-[#080c14] overflow-hidden relative">
+        
+        <!-- الشريط العلوي -->
+        <header class="border-b border-slate-800/80 bg-[#080c14]/90 backdrop-blur-md px-6 py-3.5 flex justify-between items-center z-10">
+            <div class="flex items-center gap-3">
+                <span class="text-xs bg-slate-900 text-cyan-400 px-3 py-1 rounded-full border border-slate-800 font-mono font-bold" id="current-view-title">HOME</span>
+            </div>
+            <div class="text-xs text-slate-400 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>النظام يعمل بكفاءة عالية</span>
+            </div>
+        </header>
+
+        <!-- منطقة التبديل بين الشاشات -->
+        <div class="flex-1 overflow-y-auto custom-scrollbar relative">
+
+            <!-- 1. الرئيسية (Home Screen) -->
+            <div id="view-home" class="p-8 max-w-5xl mx-auto text-center flex flex-col items-center justify-center min-h-full">
+                <span class="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs px-3 py-1 rounded-full font-bold mb-4">
+                    ✨ الجيل الجديد من الذكاء الاصطناعي
+                </span>
+                <h1 class="text-4xl md:text-5xl font-black text-white mb-3 leading-tight">
+                    ماذا تريد أن تبني اليوم؟ <br>
+                    <span class="bg-gradient-to-r from-indigo-400 via-cyan-400 to-teal-300 bg-clip-text text-transparent">What will you build today?</span>
+                </h1>
+                <p class="text-slate-400 text-sm mb-8 max-w-xl">
+                    أنشئ تطبيقات ومواقع احترافية متكاملة بالدردشة التفاعلية مع الذكاء الاصطناعي بكل سهولة.
+                </p>
+
+                <!-- صندوق الأوامر والطلب (Prompt Box) -->
+                <div class="w-full max-w-2xl bg-slate-900/80 border border-slate-800 rounded-3xl p-4 shadow-2xl text-right">
+                    <textarea id="prompt-input" rows="3" placeholder="وصف التطبيق الذي تريد بناءه... (مثال: قم بإنشاء تطبيق متجر إلكتروني للملابس بتصميم داكن وأنيق)" class="w-full bg-transparent text-white text-sm placeholder-slate-500 focus:outline-none resize-none"></textarea>
+                    
+                    <div class="flex justify-between items-center mt-3 pt-3 border-t border-slate-800/80">
+                        <span class="text-xs text-slate-500 flex items-center gap-2">
+                            <i class="fa-solid fa-sparkles text-cyan-400"></i> App Factory Engine v2.6
+                        </span>
+                        <button onclick="startBuildingFromPrompt()" class="bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-bold px-6 py-2.5 rounded-2xl text-sm shadow-lg shadow-cyan-500/20 hover:opacity-90 transition flex items-center gap-2">
+                            <span>إنشاء التطبيق</span>
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- خيارات قوالب سريعة -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-2xl mt-8">
+                    <div onclick="quickPrompt('تطبيق متجر إلكتروني متكامل')" class="bg-slate-900/40 border border-slate-800/80 hover:border-cyan-500/50 p-4 rounded-2xl cursor-pointer transition text-center group">
+                        <i class="fa-solid fa-cart-shopping text-cyan-400 text-xl mb-2 group-hover:scale-110 transition"></i>
+                        <p class="text-xs font-bold text-white">متجر إلكتروني</p>
+                    </div>
+                    <div onclick="quickPrompt('لوحة تحكم إدارية ومشاريع CRM')" class="bg-slate-900/40 border border-slate-800/80 hover:border-cyan-500/50 p-4 rounded-2xl cursor-pointer transition text-center group">
+                        <i class="fa-solid fa-chart-line text-indigo-400 text-xl mb-2 group-hover:scale-110 transition"></i>
+                        <p class="text-xs font-bold text-white">لوحة تحكم CRM</p>
+                    </div>
+                    <div onclick="quickPrompt('تطبيق محادثات وتواصل بالذكاء الاصطناعي')" class="bg-slate-900/40 border border-slate-800/80 hover:border-cyan-500/50 p-4 rounded-2xl cursor-pointer transition text-center group">
+                        <i class="fa-solid fa-robot text-teal-400 text-xl mb-2 group-hover:scale-110 transition"></i>
+                        <p class="text-xs font-bold text-white">شات بوت ذكي</p>
+                    </div>
+                    <div onclick="quickPrompt('منصة تعليمية والدورات التدريبية')" class="bg-slate-900/40 border border-slate-800/80 hover:border-cyan-500/50 p-4 rounded-2xl cursor-pointer transition text-center group">
+                        <i class="fa-solid fa-graduation-cap text-amber-400 text-xl mb-2 group-hover:scale-110 transition"></i>
+                        <p class="text-xs font-bold text-white">منصة تعليمية</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. بيئة العمل (Workspace) -->
+            <div id="view-workspace" class="hidden h-full flex flex-col md:flex-row">
+                <!-- التيرمنال والملاحظات -->
+                <div class="w-full md:w-1/2 border-l border-slate-800/80 bg-[#05080e] p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800/80">
+                            <span class="text-xs font-mono text-cyan-400 font-bold flex items-center gap-2">
+                                <i class="fa-solid fa-terminal"></i> TERMINAL LOGS
+                            </span>
+                            <span class="text-[10px] text-slate-500 font-mono">STATUS: ACTIVE</span>
+                        </div>
+                        <div id="terminal-logs" class="font-mono text-xs text-slate-300 space-y-2 bg-slate-950/90 p-4 rounded-2xl border border-slate-800/80 h-72 overflow-y-auto custom-scrollbar">
+                            <p class="text-slate-500">> System initialised. Waiting for user input...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 bg-slate-900/60 p-4 rounded-2xl border border-slate-800/80">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs text-slate-400">تقدم بناء التطبيق:</span>
+                            <span id="app-status-text" class="text-xs font-bold text-amber-400">جاهز للبدء</span>
+                        </div>
+                        <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+                            <div id="progress-bar" class="bg-gradient-to-r from-indigo-600 to-cyan-500 h-full w-0 transition-all duration-500"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المعاينة الحية وإظهار الكود -->
+                <div class="w-full md:w-1/2 p-6 flex flex-col items-center justify-center bg-[#080c14] relative">
+                    <div id="preview-container" class="w-full max-w-md bg-slate-900/90 border border-slate-800/80 rounded-3xl p-6 shadow-2xl text-center">
+                        <div class="w-16 h-16 bg-cyan-500/10 text-cyan-400 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4 border border-cyan-500/20">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">معاينة التطبيق والكود المصدري</h3>
+                        <p class="text-xs text-slate-400 mb-6" id="code-access-text">الكود المصدري محمي ومتاح فقط لمشتركي باقة Business.</p>
+                        <div id="code-action-btn">
+                            <button onclick="switchTab('pricing')" class="bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-lg">ترقية الحساب الآن 🔓</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. شاشة الباقات والاشتراك -->
+            <div id="view-pricing" class="hidden p-8 max-w-4xl mx-auto">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-black text-white mb-2">خطط الاشتراك والترقية | Pricing</h2>
+                    <p class="text-slate-400 text-xs">اختر الخطة المناسبة لاحتياجاتك وابدأ في بناء وتصدير تطبيقاتك.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- الخطة المجانية -->
+                    <div class="bg-slate-900/60 border border-slate-800/80 p-8 rounded-3xl flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 font-bold">STARTER PLAN</span>
+                            <h3 class="text-2xl font-bold text-white mt-2">المجانية | Free</h3>
+                            <p class="text-3xl font-black text-white my-4">$0</p>
+                            <ul class="text-xs text-slate-300 space-y-3 mb-6">
+                                <li><i class="fa-solid fa-check text-cyan-400 ml-2"></i> معاينة التطبيقات التي تم توليدها</li>
+                                <li class="text-slate-600"><i class="fa-solid fa-lock text-slate-600 ml-2"></i> رؤية الكود المصدري (غير متاح)</li>
+                            </ul>
+                        </div>
+                        <button onclick="showToast('حسابك مفعل حالياً على الباقة المجانية.', 'info')" class="w-full bg-slate-800 text-white py-3 rounded-2xl text-xs font-bold">الباقة الحالية</button>
+                    </div>
+                    
+                    <!-- باقة الأعمال Business -->
+                    <div class="bg-slate-900/90 border-2 border-cyan-500/80 p-8 rounded-3xl flex flex-col justify-between shadow-[0_0_40px_rgba(6,182,212,0.15)] relative">
+                        <span class="absolute -top-3 right-6 text-[10px] text-cyan-400 bg-cyan-950 border border-cyan-700 px-3 py-1 rounded-full font-bold">موصى بها</span>
+                        <div>
+                            <span class="text-xs text-cyan-400 font-bold">ENTERPRISE PLAN</span>
+                            <h3 class="text-2xl font-bold text-white mt-2">الأعمال | Business</h3>
+                            <p class="text-3xl font-black text-cyan-400 my-4">$49 <span class="text-xs text-slate-500 font-normal">/ شهرياً</span></p>
+                            <ul class="text-xs text-slate-300 space-y-3 mb-6">
+                                <li><i class="fa-solid fa-check text-cyan-400 ml-2"></i> رؤية الكود المصدري ونسخه كاملاً 🔓</li>
+                                <li><i class="fa-solid fa-check text-cyan-400 ml-2"></i> تصدير الكود وتنزيله كملف مباشر</li>
+                                <li><i class="fa-solid fa-check text-cyan-400 ml-2"></i> أولوية المعالجة بالذكاء الاصطناعي</li>
+                            </ul>
+                        </div>
+                        <button onclick="openPaymentModal()" class="w-full bg-gradient-to-r from-indigo-600 to-cyan-500 text-white py-3 rounded-2xl text-xs font-bold shadow-lg shadow-cyan-500/20 hover:opacity-95 transition">
+                            الدفع والاشتراك الآن 💳
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. شاشة المشاريع (Projects) -->
+            <div id="view-projects" class="hidden p-8 max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold text-white mb-6">مشاريعي المحفوظة | My Projects</h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900/60 border border-slate-800/80 p-5 rounded-2xl flex justify-between items-center">
+                        <div>
+                            <h4 class="text-sm font-bold text-white">تطبيق المتجر الإلكتروني</h4>
+                            <p class="text-[10px] text-slate-500 mt-1">تم الإنشاء مؤخراً</p>
+                        </div>
+                        <button onclick="switchTab('workspace')" class="bg-cyan-500/10 text-cyan-400 px-4 py-2 rounded-xl text-xs font-bold border border-cyan-500/30">فتح المشروع</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. لوحة التحكم للأدمن (Admin Panel) -->
+            <div id="view-admin" class="hidden p-8 max-w-5xl mx-auto space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-800/80 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-black text-rose-500 flex items-center gap-2">
+                            <i class="fa-solid fa-user-gear"></i> لوحة تحكم المسؤول (Admin Panel)
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">هذه اللوحة محمية وتظهر لبريد الأدمن المخصص فقط.</p>
+                    </div>
+                    <span class="bg-rose-500/10 text-rose-400 border border-rose-500/30 px-3 py-1 rounded-full text-xs font-mono font-bold">
+                        أنت الأدمن الحالي 👑
+                    </span>
+                </div>
+
+                <!-- قسم استبدال بريد الأدمن -->
+                <div class="bg-slate-900/80 border border-slate-800/80 p-5 rounded-2xl">
+                    <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-key text-amber-400"></i> استبدال بريد الأدمن (Change Admin Email)
+                    </h3>
+                    <div class="flex gap-3 max-w-md">
+                        <input type="email" id="new-admin-email-input" placeholder="أدخل البريد الجديد..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500 font-mono">
+                        <button onclick="changeAdminEmail()" class="bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                            تأكيد التغيير
+                        </button>
+                    </div>
+                </div>
+
+                <!-- جدول الحظر وإدارة المستخدمين -->
+                <div class="bg-slate-900/80 border border-slate-800/80 p-5 rounded-2xl">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-users-slash text-cyan-400"></i> إدارة الحظر والأمان
+                        </h3>
+                        <button id="unban-mode-btn" onclick="toggleUnbanMode()" class="bg-slate-800 border border-slate-700 text-slate-300 text-xs px-3 py-1.5 rounded-lg font-bold">
+                            وضع فك الحظر: <span id="unban-status-text" class="text-slate-500">مغلق</span>
+                        </button>
+                    </div>
+                    
+                    <div class="bg-rose-950/30 border border-rose-900/50 p-3 rounded-xl mb-4 text-xs text-rose-300">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-400 ml-1"></i>
+                        <b>شرط الحظر القانوني:</b> اضغط <b>ضغطتين (Double Click)</b> على أي حساب لحظره. لا يُسمح بالحظر إلا إذا كان الحساب يحاول إنشاء تطبيقات غير قانونية أو انتهاك الشروط.
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs text-slate-300">
+                            <thead class="bg-slate-950 text-slate-400 border-b border-slate-800">
+                                <tr>
+                                    <th class="p-3">البريد الإلكتروني</th>
+                                    <th class="p-3">الحالة</th>
+                                    <th class="p-3">سبب الحظر (مخالفة)</th>
+                                    <th class="p-3">الاشتراك</th>
+                                    <th class="p-3">إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body" class="divide-y divide-slate-800/50"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- نافذة بوابات الدفع الإلكتروني (Payment Modal) -->
+    <div id="payment-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800/80 w-full max-w-lg rounded-3xl p-6 shadow-2xl relative">
+            <button onclick="closePaymentModal()" class="absolute top-4 left-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <h3 class="text-lg font-bold text-white mb-1 flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-cyan-400"></i> بوابة الدفع الإلكتروني الآمنة
+            </h3>
+            <p class="text-xs text-slate-400 mb-5">جميع المعاملات المشفرة ومحمية بالكامل بدون تخزين أي بيانات حساسة.</p>
+
+            <!-- وسائل الدفع -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
+                <button onclick="selectPaymentMethod('vodafone')" id="btn-vodafone" class="payment-method-btn bg-slate-800 border border-cyan-500 text-white p-3 rounded-xl flex flex-col items-center gap-2 text-xs font-bold transition">
+                    <i class="fa-solid fa-mobile-screen-button text-red-500 text-lg"></i> فودافون كاش
+                </button>
+                <button onclick="selectPaymentMethod('paypal')" id="btn-paypal" class="payment-method-btn bg-slate-950 border border-slate-800 text-slate-400 p-3 rounded-xl flex flex-col items-center gap-2 text-xs font-bold transition">
+                    <i class="fa-brands fa-paypal text-blue-400 text-lg"></i> PayPal
+                </button>
+                <button onclick="selectPaymentMethod('visa')" id="btn-visa" class="payment-method-btn bg-slate-950 border border-slate-800 text-slate-400 p-3 rounded-xl flex flex-col items-center gap-2 text-xs font-bold transition">
+                    <i class="fa-solid fa-credit-card text-amber-400 text-lg"></i> Visa / Card
+                </button>
+                <button onclick="selectPaymentMethod('bank')" id="btn-bank" class="payment-method-btn bg-slate-950 border border-slate-800 text-slate-400 p-3 rounded-xl flex flex-col items-center gap-2 text-xs font-bold transition">
+                    <i class="fa-solid fa-building-columns text-emerald-400 text-lg"></i> تحويل بنكي
+                </button>
+            </div>
+
+            <!-- تفاصيل الخيار المحدد -->
+            <div id="payment-form-container">
+                <div id="form-vodafone" class="space-y-3">
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs">
+                        <p class="text-slate-400">تحويل مبلغ ($49) إلى رقم المحفظة المباشر:</p>
+                        <p class="text-cyan-400 font-mono font-bold text-sm my-1">01000000000</p>
+                    </div>
+                </div>
+                <div id="form-paypal" class="hidden space-y-3">
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs text-center">
+                        <p class="text-slate-400">سيتم إعادة توجيهك بأمان لموقع PayPal الرسمي للتأكيد.</p>
+                    </div>
+                </div>
+                <div id="form-visa" class="hidden space-y-3">
+                    <input type="text" placeholder="رقم البطاقة (4532 •••• •••• 8892)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+                <div id="form-bank" class="hidden space-y-3">
+                    <p class="text-xs text-emerald-400 font-mono">IBAN: EG90 0000 0000 0000 0000 0000 000</p>
+                </div>
+            </div>
+
+            <button onclick="processPayment()" class="w-full mt-4 bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-bold py-3 rounded-2xl text-xs shadow-lg hover:opacity-90 transition">
+                تأكيد وتحويل المبلغ ($49) 🚀
+            </button>
+        </div>
     </div>
+
+    <!-- المنطق الخفي بالجافاسكريبت -->
+    <script>
+        let currentAdminEmail = localStorage.getItem('appfactory_admin_email') || "salehsalehblak@gmail.com"; 
+        let isUnbanModeActive = false;
+        let isBusinessUser = localStorage.getItem('appfactory_user_plan') === 'Business';
+
+        let defaultUsers = [
+            { email: "user1@gmail.com", isBanned: false, banReason: "-", plan: "Free" },
+            { email: "client_pro@gmail.com", isBanned: false, banReason: "-", plan: "Business" },
+            { email: "spammer_test@gmail.com", isBanned: true, banReason: "محاولة إنشاء تطبيق غير قانوني", plan: "Free" }
+        ];
+
+        let usersList = JSON.parse(localStorage.getItem('appfactory_users_list')) || defaultUsers;
+
+        function saveData() {
+            localStorage.setItem('appfactory_admin_email', currentAdminEmail);
+            localStorage.setItem('appfactory_user_plan', isBusinessUser ? 'Business' : 'Free');
+            localStorage.setItem('appfactory_users_list', JSON.stringify(usersList));
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const color = type === 'success' ? 'bg-emerald-950 border-emerald-500 text-emerald-300' : 'bg-rose-950 border-rose-500 text-rose-300';
+            toast.className = `p-3.5 rounded-xl border text-xs shadow-2xl transition-all duration-300 ${color}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function handleEmailInput() {
+            const enteredEmail = document.getElementById('user-email-input').value.trim().toLowerCase();
+            const adminMenuItem = document.getElementById('admin-menu-item');
+
+            if (enteredEmail === currentAdminEmail.toLowerCase()) {
+                adminMenuItem.classList.remove('hidden');
+            } else {
+                adminMenuItem.classList.add('hidden');
+                if(!document.getElementById('view-admin').classList.contains('hidden')) {
+                    switchTab('home');
+                }
+            }
+        }
+
+        function switchTab(tabName) {
+            ['home', 'workspace', 'pricing', 'projects', 'admin'].forEach(t => {
+                const view = document.getElementById('view-' + t);
+                if(view) view.classList.add('hidden');
+            });
+
+            document.getElementById('view-' + tabName).classList.remove('hidden');
+            document.getElementById('current-view-title').innerText = tabName.toUpperCase();
+
+            if (tabName === 'admin') renderUsersTable();
+            if (tabName === 'workspace') updateWorkspaceView();
+        }
+
+        function quickPrompt(text) {
+            document.getElementById('prompt-input').value = text;
+            startBuildingFromPrompt();
+        }
+
+        function startBuildingFromPrompt() {
+            const val = document.getElementById('prompt-input').value.trim();
+            if(!val) {
+                showToast('يرجى إدخال وصف التطبيق أولاً!', 'error');
+                return;
+            }
+            switchTab('workspace');
+            const logs = document.getElementById('terminal-logs');
+            logs.innerHTML += `<p class="text-cyan-400">> تحليل المواصفات: "${val}"</p>`;
+            logs.innerHTML += `<p class="text-slate-400">> جاري التوليد بواسطة الذكاء الاصطناعي...</p>`;
+            
+            document.getElementById('progress-bar').style.width = "40%";
+            setTimeout(() => {
+                logs.innerHTML += `<p class="text-emerald-400">> تم بناء الهيكل التحتية للواجهة بنجاح!</p>`;
+                document.getElementById('progress-bar').style.width = "100%";
+                document.getElementById('app-status-text').innerText = "مكتمل | Complete";
+            }, 1500);
+        }
+
+        function updateWorkspaceView() {
+            const text = document.getElementById('code-access-text');
+            const actionBtn = document.getElementById('code-action-btn');
+
+            if(isBusinessUser) {
+                text.innerText = "أنت مشترك في باقة Business! يمكنك الآن استعراض وتنزيل الكود المصدري كاملاً.";
+                text.className = "text-xs text-emerald-400 font-bold mb-4";
+                actionBtn.innerHTML = `<button onclick="downloadCode()" class="bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-lg">تنزيل الكود المصدري 📥</button>`;
+            }
+        }
+
+        function downloadCode() {
+            showToast('جاري تحضير وتنزيل الكود المصدري...');
+        }
+
+        function openPaymentModal() { document.getElementById('payment-modal').classList.remove('hidden'); }
+        function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
+
+        function selectPaymentMethod(method) {
+            document.querySelectorAll('.payment-method-btn').forEach(btn => {
+                btn.classList.remove('border-cyan-500', 'text-white', 'bg-slate-800');
+                btn.classList.add('border-slate-800', 'text-slate-400', 'bg-slate-950');
+            });
+            document.getElementById('btn-' + method).classList.add('border-cyan-500', 'text-white', 'bg-slate-800');
+            
+            ['vodafone', 'paypal', 'visa', 'bank'].forEach(m => document.getElementById('form-' + m).classList.add('hidden'));
+            document.getElementById('form-' + method).classList.remove('hidden');
+        }
+
+        function processPayment() {
+            showToast('جاري تأكيد عملية التحويل المالي...');
+            setTimeout(() => {
+                isBusinessUser = true;
+                updateUserBadge();
+                saveData();
+                closePaymentModal();
+                showToast('مبروك! تم تفعيل باقة Business لحسابك بنجاح.');
+            }, 1200);
+        }
+
+        function updateUserBadge() {
+            const badge = document.getElementById('user-plan-badge');
+            if(isBusinessUser) {
+                badge.innerText = "باقة Business 🔓";
+                badge.className = "text-[10px] text-cyan-400 font-bold";
+            } else {
+                badge.innerText = "باقة مجانية | Free";
+                badge.className = "text-[10px] text-amber-400 font-semibold";
+            }
+        }
+
+        function renderUsersTable() {
+            const tbody = document.getElementById('users-table-body');
+            tbody.innerHTML = "";
+
+            usersList.forEach((user, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/40 cursor-pointer select-none transition";
+                tr.ondblclick = () => handleUserDblClick(index);
+
+                tr.innerHTML = `
+                    <td class="p-3 font-mono ${user.isBanned ? 'line-through text-rose-400' : 'text-white'}">
+                        ${user.email} ${user.isBanned ? '🚫' : ''}
+                    </td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${user.isBanned ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'}">
+                            ${user.isBanned ? 'محظور' : 'نشط'}
+                        </span>
+                    </td>
+                    <td class="p-3 text-[11px] text-slate-400">${user.banReason || '-'}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${user.plan === 'Business' ? 'bg-cyan-500/20 text-cyan-400' : 'bg-slate-800 text-slate-400'}">
+                            ${user.plan}
+                        </span>
+                    </td>
+                    <td class="p-3">
+                        <button onclick="togglePlan(${index})" class="bg-slate-800 text-cyan-300 border border-slate-700 px-2.5 py-1 rounded-lg text-[10px]">
+                            تغيير الاشتراك
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function handleUserDblClick(index) {
+            if (isUnbanModeActive) {
+                usersList[index].isBanned = false;
+                usersList[index].banReason = "-";
+                showToast(`تم فك الحظر عن: ${usersList[index].email}`);
+            } else {
+                const reason = prompt("أدخل سبب المخالفة للحظر (شرط: محاولة إنشاء تطبيقات غير قانونية):");
+                if (reason && reason.trim() !== "") {
+                    usersList[index].isBanned = true;
+                    usersList[index].banReason = reason.trim();
+                    showToast(`تم حظر الحساب بنجاح.`, 'error');
+                } else {
+                    showToast("إلغاء: يلزم إدخال سبب المخالفة للحظر.", 'error');
+                    return;
+                }
+            }
+            saveData();
+            renderUsersTable();
+        }
+
+        function toggleUnbanMode() {
+            isUnbanModeActive = !isUnbanModeActive;
+            const btnText = document.getElementById('unban-status-text');
+            btnText.innerText = isUnbanModeActive ? "مُفعل 🟢" : "مغلق 🔴";
+            btnText.className = isUnbanModeActive ? "text-emerald-400 font-bold" : "text-slate-500";
+        }
+
+        function togglePlan(index) {
+            usersList[index].plan = usersList[index].plan === 'Free' ? 'Business' : 'Free';
+            saveData();
+            renderUsersTable();
+        }
+
+        function changeAdminEmail() {
+            const newEmail = document.getElementById('new-admin-email-input').value.trim();
+            if (newEmail && newEmail.includes('@')) {
+                currentAdminEmail = newEmail;
+                saveData();
+                showToast(`تم تحديث بريد الأدمن إلى: ${newEmail}`);
+                document.getElementById('new-admin-email-input').value = "";
+                handleEmailInput();
+            } else {
+                showToast('يرجى إدخال بريد إلكتروني صحيح!', 'error');
+            }
+        }
+
+        // تشغيل البداية
+        document.getElementById('user-email-input').value = currentAdminEmail;
+        updateUserBadge();
+        handleEmailInput();
+    </script>
 </body>
 </html>
