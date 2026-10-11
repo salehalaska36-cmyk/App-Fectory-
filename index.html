@@ -1,63 +1,87 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقعي الجديد</title>
+    <title>الرئيسية | منصتنا الإلكترونية</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
         body {
-            font-family: Tahoma, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #f4f7fe;
+            color: #2b3674;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
             text-align: center;
-            padding: 50px;
         }
         h1 {
-            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1b2559;
         }
-        p {
-            color: #666;
+        p.subtitle {
+            font-size: 16px;
+            color: #a3edd9;
+            color: #707eae;
+            margin-bottom: 30px;
+        }
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+        }
+        .nav-card {
+            background: #f7f9fc;
+            border: 2px solid #e9edf7;
+            border-radius: 14px;
+            padding: 18px;
+            text-decoration: none;
+            color: #2b3674;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-card:hover {
+            background: #4318ff;
+            color: #ffffff;
+            border-color: #4318ff;
+            transform: translateY(-4px);
+            box-shadow: 0px 10px 20px rgba(67, 24, 255, 0.2);
         }
     </style>
 </head>
 <body>
-    <h1>مرحباً بك في موقعي الإلكتروني!</h1>
-    <p>تم إنشاء الموقع ونشره بنجاح.</p>
+    <div class="container">
+        <h1>مرحباً بك في منصتنا</h1>
+        <p class="subtitle">اختر الصفحة التي ترغب في الانتقال إليها:</p>
+        
+        <div class="nav-grid">
+            <a href="login.html" class="nav-card">تسجيل الدخول</a>
+            <a href="admin.html" class="nav-card">لوحة التحكم</a>
+            <a href="pricing.html" class="nav-card">الأسعار</a>
+            <a href="app.html" class="nav-card">التطبيق</a>
+            <a href="mony.html" class="nav-card">المالية</a>
+            <a href="expor.html" class="nav-card">التصدير</a>
+        </div>
+    </div>
 </body>
 </html>
-<p>
-  <a href="admin.html">Admin</a><br>
-  <a href="app.html">App</a><br>
-  <a href="expor.html">Export</a><br>
-  <a href="login.html">Login</a><br>
-  <a href="mony.html">Money</a><br>
-  <a href="pricing.html">Pricing</a>
-</p>
-=======
-!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>موقعي الجديد</title>
-    <style>
-        body {
-            font-family: Tahoma, sans-serif;
-            background-color: #f4f4f9;
-            text-align: center;
-            padding: 50px;
-        }
-        h1 {
-            color: #333;
-        }
-        p {
-            color: #666;
-        }
-    </style>
-</head>
-<body>
-    <h1>مرحباً بك في موقعي الإلكتروني!</h1>
-    <p>تم إنشاء الموقع ونشره بنجاح.</p>
-</body>
-</html>
->>>>>>> cb1b65a51f347cf05d6fcd71dc4acc5e13f7fd5b
