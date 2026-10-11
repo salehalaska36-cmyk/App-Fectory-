@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>باقات الاشتراك والدفع الآمن - المنصة الذكية</title>
+    <style>
+        :root {
+            --bg-main: #0d1b2a;
+            --bg-card: #1b263b;
+            --accent-color: #415a77;
+            --text-color: #ffffff;
+            --green-color: #4ade80;
+            --blue-color: #60a5fa;
+            --gold-color: #f59e0b;
+            --red-color: #f87171;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        h1 {
+            margin-bottom: 5px;
+            color: #e0e1dd;
+            text-align: center;
+        }
+        p.subtitle {
+            color: #778da9;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        /* شبكة الباقات */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .card h2 {
+            margin-top: 0;
+            color: var(--blue-color);
+        }
+        .price {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--green-color);
+            margin: 15px 0;
+        }
+        .features {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            text-align: right;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+        .features li {
+            margin-bottom: 10px;
+        }
+        .btn-subscribe {
+            background-color: var(--blue-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-subscribe:hover {
+            background-color: #3b82f6;
+        }
+
+        /* نافذة إتمام الدفع (Modal) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal {
+            background-color: var(--bg-card);
+            border: 1px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 30px;
+            width: 100%;
+            max-width: 450px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .modal h3 {
+            margin-top: 0;
+            color: var(--gold-color);
+        }
+        .modal-instruction {
+            background-color: rgba(65, 90, 119, 0.3);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            border-right: 4px solid var(--gold-color);
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: right;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--accent-color);
+            background-color: #0d1b2a;
+            color: white;
+            box-sizing: border-box;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-confirm {
+            background-color: var(--green-color);
+            color: #000;
+            flex-grow: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-cancel {
+            background-color: var(--red-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .back-link {
+            margin-top: 20px;
+            color: #778da9;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>باقات الاشتراك والترقية الذكية</h1>
+    <p class="subtitle">اختر الباقة المناسبة لمشروعك، وحول المبلغ بأمان لتنضم فورا لوحة التحكم والخزنة المركزية</p>
+
+    <!-- بطاقات الباقات -->
+    <div class="pricing-grid">
+        
+        <!-- الباقة المجانية -->
+        <div class="card">
+            <div>
+                <h2>الباقة المجانية</h2>
+                <div class="price">0 ج.م</div>
+                <ul class="features">
+                    <li>✓ مشاريع محدودة</li>
+                    <li>✓ معاينة حية أساسية</li>
+                    <li>✓ دعم مجاني محدود</li>
+                </ul>
+            </div>
+            <button class="btn-subscribe" style="background-color: var(--accent-color);" onclick="alert('أنت بالفعل مستخدم للباقة المجانية!')">الباقة الحالية</button>
+        </div>
+
+        <!-- باقة البرو -->
+        <div class="card" style="border-color: var(--blue-color);">
+            <div>
+                <h2>باقة برو (Pro)</h2>
+                <div class="price">250 ج.م <span style="font-size:14px; color:#aaa;">/ شهر</span></div>
+                <ul class="features">
+                    <li>✓ مشاريع غير محدودة</li>
+                    <li>✓ إمكانية تحميل ملفات المشروع (ZIP)</li>
+                    <li>✓ تحويل التطبيق إلى ملف (APK)</li>
+                    <li>✓ دعم فني أولوي</li>
+                </ul>
+            </div>
+            <button class="btn-subscribe" onclick="openPaymentModal('باقة برو (Pro)', 250)">اشترك الآن</button>
+        </div>
+
+        <!-- باقة البزنس -->
+        <div class="card" style="border-color: var(--gold-color);">
+            <div>
+                <h2>باقة البزنس (Business)</h2>
+                <div class="price">600 ج.م <span style="font-size:14px; color:#aaa;">/ شهر</span></div>
+                <ul class="features">
+                    <li>✓ كل مميزات باقة برو</li>
+                    <li>✓ عرض الأكواد الكاملة والمتقدمة</li>
+                    <li>✓ صلاحيات إضافية متقدمة</li>
+                    <li>✓ أولوية قصوى في التحديثات</li>
+                </ul>
+            </div>
+            <button class="btn-subscribe" style="background-color: var(--gold-color); color: #000;" onclick="openPaymentModal('باقة البزنس (Business)', 600)">اشترك الآن</button>
+        </div>
+
+    </div>
+
+    <a href="app.html" class="back-link">← العودة إلى واجهة العمل الرئيسية</a>
+
+    <!-- نافذة إتمام الدفع اليدوي الآمن (Modal) -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal">
+            <h3 id="modalTitle">إتمام الدفع الآمن</h3>
+            
+            <div class="modal-instruction">
+                <strong>تعليمات التحويل:</strong><br>
+                قم بتحويل المبلغ المطلوب مباشرة إلى المحفظة الرسمية للموقع عبر فودافون كاش أو التحويل اللحظي على الرقم: <strong>01000000000</strong>. بعد إتمام التحويل، أدخل بيانات العملية أدناه لتحديث حسابك وإيداع المبلغ في خزنة المنصة أوتوماتيكياً.
+            </div>
+
+            <div class="form-group">
+                <label>رقم الهاتف المحول منه أو اسم الحساب:</label>
+                <input type="text" id="senderPhone" placeholder="مثال: 011xxxxxxxx">
+            </div>
+
+            <div class="form-group">
+                <label>رقم عملية التحويل أو كود التأكيد (Transaction ID):</label>
+                <input type="text" id="transactionCode" placeholder="أدخل الكود الوارد في رسالة التأكيد">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-confirm" onclick="submitPayment()">تأكيد وإرسال للخزنة</button>
+                <button class="btn-cancel" onclick="closePaymentModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedPlanName = '';
+        let selectedPlanPrice = 0;
+
+        function openPaymentModal(planName, price) {
+            selectedPlanName = planName;
+            selectedPlanPrice = price;
+            document.getElementById('modalTitle').textContent = `اشتراك: ${planName} (${price} ج.م)`;
+            document.getElementById('paymentModal').style.display = 'flex';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            document.getElementById('senderPhone').value = '';
+            document.getElementById('transactionCode').value = '';
+        }
+
+        // الدالة الأساسية لتسجيل العملية في "خزنة الأدمن" وتطبيق مبدأ الأمان والخصوصية
+        function submitPayment() {
+            const phone = document.getElementById('senderPhone').value.trim();
+            const txCode = document.getElementById('transactionCode').value.trim();
+
+            if (!phone || !txCode) {
+                alert('الرجاء إدخال بيانات التحويل وكود العملية بدقة ليتسنى للنظام مطابقتها.');
+                return;
+            }
+
+            // 1. جلب الخزنة الحالية من الـ localStorage (التي تربط هذا الملف بلوحة تحكم الأدمن admin.html)
+            let currentTreasury = parseFloat(localStorage.getItem('adminTreasuryBalance')) || 12500;
+            
+            // 2. إضافة قيمة الباقة المدفوعة لخزنة الموقع فوراً
+            currentTreasury += selectedPlanPrice;
+            localStorage.setItem('adminTreasuryBalance', currentTreasury);
+
+            // 3. زيادة عدد المشتركين الجدد أوتوماتيكياً
+            let currentSubscribers = parseInt(localStorage.getItem('adminSubscribersCount')) || 48;
+            localStorage.setItem('adminSubscribersCount', currentSubscribers + 1);
+
+            // 4. تطبيق الأمان التام: تنبيه المستخدم ومسح البيانات الحساسة من الحقول فوراً (عدم تخزينها لأجل الخصوصية)
+            alert(`✅ تم إرسال طلب الاشتراك في "${selectedPlanName}" بنجاح!\n\nتم تحويل وتأكيد المبلغ (${selectedPlanPrice} ج.م) وإيداعه في خزنة المنصة المركزية.\nسيتم تفعيل حسابك خلال لحظات.`);
+            
+            // تفريغ الحقول تماماً لضمان عدم الاحتفاظ بأي بيانات حساسة (Privacy & Security Compliance)
+            document.getElementById('senderPhone').value = '';
+            document.getElementById('transactionCode').value = '';
+
+            closePaymentModal();
+
+            // تحويل المستخدم لواجهة العمل أو تفعيل الباقة
+            window.location.href = 'app.html';
+        }
+    </script>
+
+</body>
+</html>

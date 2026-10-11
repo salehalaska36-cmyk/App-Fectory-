@@ -1,0 +1,15 @@
+{
+  "name": "app-factory-ai-starter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local AI app-generation starter with persistent projects, preview and ZIP export",
+  "type": "module",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "openai": "^5.20.0"
+  }
+}

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>App Factory AI</title>
+<style>
+:root{color-scheme:dark;--bg:#0a0d14;--panel:#121826;--line:#263247;--text:#edf2ff;--muted:#9ba9c1;--accent:#7c8cff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#17213c,var(--bg) 55%);font-family:system-ui,Segoe UI,sans-serif;color:var(--text);min-height:100vh}
+header{padding:26px max(20px,calc((100% - 1120px)/2));border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{font-weight:800;font-size:22px}.logo span{color:var(--accent)}.badge{color:#b9c4ff;border:1px solid #454e88;border-radius:30px;padding:6px 11px;font-size:12px}
+main{max-width:1120px;margin:36px auto;padding:0 20px}.hero{max-width:800px;margin:0 auto 28px;text-align:center}.hero h1{font-size:clamp(30px,5vw,52px);margin:8px 0 12px;line-height:1.15}.hero p{color:var(--muted);line-height:1.8}
+.panel{background:#111827dd;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 20px 60px #0003}
+textarea{width:100%;min-height:145px;background:#0b111d;color:var(--text);border:1px solid #33415a;border-radius:13px;padding:16px;font:inherit;resize:vertical;outline:none}textarea:focus{border-color:var(--accent)}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px}button,.btn{border:0;border-radius:11px;padding:12px 18px;background:var(--accent);color:white;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}button:disabled{opacity:.5;cursor:wait}.subtle{color:var(--muted);font-size:13px}
+.layout{display:grid;grid-template-columns: minmax(0,1fr) minmax(0,1.1fr);gap:18px;margin-top:22px}.section-title{font-size:17px;font-weight:750;margin-bottom:14px}.projects{display:grid;gap:10px}.project{padding:13px;border:1px solid var(--line);border-radius:12px;background:#0c1220}.project strong{display:block;margin-bottom:7px}.status{color:#aebaff;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.actions a{font-size:13px;padding:7px 10px;border-radius:8px;background:#202b43;color:#edf2ff;text-decoration:none}
+iframe{width:100%;height:480px;background:white;border:1px solid var(--line);border-radius:12px}.empty{color:var(--muted);padding:24px;text-align:center;border:1px dashed var(--line);border-radius:12px}
+#message{margin-top:12px;color:#b9c4ff;white-space:pre-wrap}
+@media(max-width:760px){.layout{grid-template-columns:1fr}header{padding:20px}.panel{padding:16px}iframe{height:380px}}
+</style></head>
+<body>
+<header><div class="logo">✦ App Factory <span>AI</span></div><span class="badge">نسخة محلية تجريبية</span></header>
+<main>
+<section class="hero"><div class="badge">من الفكرة إلى نموذج قابل للتجربة</div><h1>اكتب فكرتك.<br>وابنِ أول نسخة.</h1><p>صف التطبيق بالعربي أو الإنجليزي. سيولّد الذكاء الاصطناعي ملفات مشروع ويب، ويمكنك فتح معاينة وتصديرها كملف ZIP.</p></section>
+<section class="panel">
+<div class="section-title">إيه التطبيق اللي عايز تبنيه؟</div>
+<textarea id="prompt" placeholder="مثال: تطبيق مصروفات شخصية بالعربي، أضيف المصروفات حسب التصنيف والتاريخ، وأشوف إجمالي الشهر في بطاقات واضحة..."></textarea>
+<div class="row"><button id="build">ابنِ التطبيق</button><span class="subtle">يحتاج مفتاح API صالحًا وإمكانية اتصال بالإنترنت.</span></div><div id="message" role="status"></div>
+</section>
+<div class="layout">
+<section class="panel"><div class="section-title">مشاريعي</div><div id="projects" class="projects"><div class="empty">تحميل المشاريع…</div></div></section>
+<section class="panel"><div class="section-title">المعاينة</div><div id="preview" class="empty">اختَر مشروعًا جاهزًا لعرضه هنا.</div></section>
+</div>
+</main>
+<script>
+const $=s=>document.querySelector(s); let timer=null;
+async function request(url,opts={}){const r=await fetch(url,opts);const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'حصل خطأ في الطلب');return d}
+async function refresh(){try{const list=await request('/api/projects');$('#projects').innerHTML='';if(!list.length){$('#projects').innerHTML='<div class="empty">لسه ما أنشأتش مشاريع.</div>';return}
+for(const p of list){const el=document.createElement('div');el.className='project';const title=document.createElement('strong');title.textContent=p.name||'مشروع جديد';const status=document.createElement('div');status.className='status';status.textContent=p.status==='ready'?'جاهز للمعاينة والتصدير':p.status==='building'?'جاري البناء…':('تعذر البناء: '+(p.error||'خطأ غير معروف'));el.append(title,status);if(p.status==='ready'){const actions=document.createElement('div');actions.className='actions';const prev=document.createElement('a');prev.href='#';prev.textContent='معاينة';prev.onclick=e=>{e.preventDefault();showPreview(p.id)};const zip=document.createElement('a');zip.href='/api/projects/'+p.id+'/export.zip';zip.textContent='تنزيل ZIP';actions.append(prev,zip);el.append(actions)}$('#projects').append(el)}
+if(list.some(p=>p.status==='building')){clearTimeout(timer);timer=setTimeout(refresh,2500)}
+}catch(e){$('#projects').innerHTML='<div class="empty">'+e.message+'</div>'}}
+async function showPreview(id){$('#preview').innerHTML='';const frame=document.createElement('iframe');frame.title='معاينة التطبيق';frame.src='/preview/'+id;$('#preview').append(frame)}
+$('#build').onclick=async()=>{const btn=$('#build');btn.disabled=true;$('#message').textContent='جاري إرسال الفكرة…';try{const d=await request('/api/projects',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:$('#prompt').value})});$('#message').textContent='تم استلام الطلب. جاري توليد الملفات…';await refresh();timer=setTimeout(refresh,1800)}catch(e){$('#message').textContent=e.message}finally{btn.disabled=false}};
+refresh();
+</script></body></html>

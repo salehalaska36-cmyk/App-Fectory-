@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة بناء التطبيقات - واجهة العمل الرئيسية</title>
+    <style>
+        :root {
+            --bg-main: #0d1b2a;
+            --bg-sidebar: #1b263b;
+            --bg-card: #22304c;
+            --accent-color: #415a77;
+            --text-color: #ffffff;
+            --green-color: #4ade80;
+            --red-color: #f87171;
+            --blue-color: #60a5fa;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* القائمة الجانبية (الشمال) - المشاريع والأدوات */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-sidebar);
+            border-left: 1px solid var(--accent-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .sidebar h2 {
+            font-size: 18px;
+            color: #e0e1dd;
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .project-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .project-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background-color: var(--bg-card);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .project-item:hover {
+            background-color: var(--accent-color);
+        }
+        .admin-link-btn {
+            margin-top: auto;
+            padding: 10px;
+            background-color: #e63946;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .admin-link-btn:hover {
+            background-color: #d90429;
+        }
+
+        /* منطقة العمل الرئيسية */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        
+        /* شريط حالة إنجاز المشروع */
+        .status-bar {
+            background-color: var(--bg-sidebar);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--accent-color);
+        }
+
+        /* خانة الكتابة السوداء لتعديل الأفكار والأكواد */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            flex-grow: 1;
+            min-height: 400px;
+        }
+        .panel {
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        .panel h3 {
+            margin-top: 0;
+            color: #778da9;
+            font-size: 15px;
+        }
+        .code-input-area {
+            background-color: #000000;
+            color: #4ade80;
+            font-family: monospace;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            flex-grow: 1;
+            resize: none;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        
+        /* واجهة المعاينة البيضاء (Preview) */
+        .preview-container {
+            background-color: #ffffff;
+            color: #000000;
+            border-radius: 6px;
+            flex-grow: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #778da9;
+        }
+
+        /* قسم قفل الكود للباقة الكبيرة الثالثة */
+        .locked-section {
+            background-color: rgba(230, 57, 70, 0.1);
+            border: 1px dashed var(--red-color);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- القائمة الجانبية (شمال) - المشاريع وأزرار التنقل -->
+    <div class="sidebar">
+        <h2>مشاريعي</h2>
+        <ul class="project-list" id="projectList">
+            <li class="project-item" onclick="loadProject('تطبيق المتجر الإلكتروني')">تطبيق المتجر الإلكتروني</li>
+            <li class="project-item" onclick="loadProject('منصة التعليم الذكي')">منصة التعليم الذكي</li>
+            <li class="project-item" onclick="loadProject('موقع المحفظة الرقمية')">موقع المحفظة الرقمية</li>
+        </ul>
+        <button class="btn" onclick="createNewProject()" style="margin-bottom: 10px;">+ مشروع جديد</button>
+        
+        <!-- زر لوحة تحكم الأدمن يظهر فقط للأدمن أو رابط مباشر -->
+        <a href="admin.html" class="admin-link-btn">لوحة تحكم الأدمن</a>
+    </div>
+
+    <!-- المحتوى الرئيسي للمنصة -->
+    <div class="main-content">
+        
+        <!-- شريط حالة المشروع وإنجازه -->
+        <div class="status-bar">
+            <div>
+                <strong>المشروع الحالي: </strong> <span id="currentProjectName">تطبيق المتجر الإلكتروني</span>
+            </div>
+            <div>
+                <strong>حالة الإنجاز: </strong> <span id="projectStatus" style="color: var(--green-color);">تم إنجاز المشروع بنجاح 100%</span>
+            </div>
+        </div>
+
+        <!-- الشاشات: خانة التعديل السوداء ومعاينة التطبيق البيضاء -->
+        <div class="workspace-grid">
+            
+            <!-- خانة الكتابة والتعديل السوداء -->
+            <div class="panel">
+                <h3>خانة الأوامر وتعديل الأكواد البرمجية</h3>
+                <textarea class="code-input-area" id="codeEditor">// اكتب فكرتك أو عدل الكود هنا...
+function initApp() {
+    console.log("Application is running smoothly...");
+}</textarea>
+                
+                <!-- نظام قفل الكود: يظهر فقط لمشتركي الباقة الكبيرة الثالثة -->
+                <div id="codeLockContainer" class="locked-section">
+                    <p style="color: var(--red-color); margin: 0 0 10px 0; font-size: 13px;">🔒 الكود البرمجي الكامل مخفي. متاح فقط لمشتركي الباقة الكبيرة (الثالثة).</p>
+                    <button class="btn" onclick="checkSubscriptionAccess()" style="background-color: #e63946;">ترقية للباقة الثالثة لعرض الكود</button>
+                </div>
+            </div>
+
+            <!-- واجهة المعاينة البيضاء (Preview) -->
+            <div class="panel">
+                <h3>معاينة الموقع أو التطبيق النهائي (Preview)</h3>
+                <div class="preview-container" id="previewBox">
+                    <h2 style="color: #1b263b; margin-bottom: 5px;">مرحباً بك في تطبيقك!</h2>
+                    <p style="color: #555; font-size: 14px;">هذه هي المعاينة الحية لصفحتك بعد اكتمال البناء والتوليد.</p>
+                    <div style="padding: 10px 20px; background-color: #415a77; color: white; border-radius: 5px; margin-top: 15px;">زر تفاعلي تجريبي</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // دالة تغيير المشروع الحالي عند الضغط عليه من القائمة الجانبية
+        function loadProject(projectName) {
+            document.getElementById('currentProjectName').textContent = projectName;
+            document.getElementById('projectStatus').textContent = 'جارٍ تحديث المعاينة...';
+            setTimeout(() => {
+                document.getElementById('projectStatus').textContent = 'تم إنجاز المشروع بنجاح 100%';
+            }, 500);
+        }
+
+        // إنشاء مشروع جديد وتحديث القائمة
+        function createNewProject() {
+            const pName = prompt('أدخل اسم المشروع الجديد:');
+            if (pName) {
+                const list = document.getElementById('projectList');
+                const newItem = document.createElement('li');
+                newItem.className = 'project-item';
+                newItem.textContent = pName;
+                newItem.onclick = () => loadProject(pName);
+                list.appendChild(newItem);
+                loadProject(pName);
+            }
+        }
+
+        // محاكاة التحقق من الباقة الكبيرة الثالثة لإظهار الكود البرمجي بالكامل
+        function checkSubscriptionAccess() {
+            const userChoice = confirm('هل أنت مشترك في الباقة الكبيرة (الثالثة) المدفوعة؟');
+            if (userChoice) {
+                document.getElementById('codeLockContainer').innerHTML = '<p style="color: var(--green-color); margin:0; font-weight:bold;">✅ تم التحقق من اشتراكك في الباقة الثالثة. يمكنك تعديل الكود بحرية الآن!</p>';
+                document.getElementById('codeEditor').style.border = '1px solid #4ade80';
+            } else {
+                alert('عذراً، يجب عليك الترقية للباقة الثالثة لفتح وتعديل الأكواد البرمجية بالكامل.');
+            }
+        }
+    </script>
+
+</body>
+</html>

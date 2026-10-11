@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المسؤول - Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0d1b2a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        .dashboard-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #1b263b;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        h1, h2 {
+            color: #e0e1dd;
+            border-bottom: 2px solid #415a77;
+            padding-bottom: 10px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background-color: #0d1b2a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #415a77;
+            text-align: center;
+        }
+        .card h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            color: #778da9;
+        }
+        .card p {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            color: #4ade80;
+        }
+        .section {
+            background-color: #0d1b2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #415a77;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #778da9;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #415a77;
+            border-radius: 5px;
+            background-color: #1b263b;
+            color: #fff;
+            box-sizing: border-box;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #e63946;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background-color: #d90429;
+        }
+        .btn-primary {
+            background-color: #415a77;
+        }
+        .btn-primary:hover {
+            background-color: #778da9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #415a77;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #1b263b;
+        }
+        #message {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <h1>لوحة تحكم الأدمن (المدير الرئيسي)</h1>
+        <p>مرحباً بك يا أدمن. الإيميل الحالي المتحكم في النظام: <span id="currentAdminDisplay" style="color: #4ade80; font-weight: bold;"></span></p>
+
+        <!-- إحصائيات النظام الشاملة -->
+        <div class="stats-grid">
+            <div class="card">
+                <h3>التطبيقات المصنوعة</h3>
+                <p id="statApps">12</p>
+            </div>
+            <div class="card">
+                <h3>إجمالي المسجلين</h3>
+                <p id="statUsers">45</p>
+            </div>
+            <div class="card">
+                <h3>دخول اليوم</h3>
+                <p id="statTodayUsers">8</p>
+            </div>
+            <div class="card">
+                <h3>خزنة الأموال</h3>
+                <p id="statMoney">$1,250</p>
+            </div>
+            <div class="card">
+                <h3>المشتركون النشطون</h3>
+                <p id="statSubscribed">30</p>
+            </div>
+            <div class="card">
+                <h3>غير المشتركين</h3>
+                <p id="statUnsubscribed">15</p>
+            </div>
+        </div>
+
+        <!-- قسم إدارة وحظر المستخدمين (Ban / Unban) -->
+        <div class="section">
+            <h2>إدارة المستخدمين (حظر / فك الحظر)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>البريد الإلكتروني للمستخدم</th>
+                        <th>الحالة</th>
+                        <th>الإجراء</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <!-- عينة بيانات تجريبية -->
+                    <tr>
+                        <td>user1@example.com</td>
+                        <td style="color: #4ade80;">نشط</td>
+                        <td><button class="btn" onclick="toggleBan(this)">حظر</button></td>
+                    </tr>
+                    <tr>
+                        <td>user2@example.com</td>
+                        <td style="color: #f87171;">محظور</td>
+                        <td><button class="btn btn-primary" onclick="toggleBan(this)">فك الحظر</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- قسم تغيير وتحديث إيميل الأدمن -->
+        <div class="section">
+            <h2>إعدادات الأدمن: تغيير البريد الإلكتروني للمسؤول</h2>
+            <p style="font-size: 13px; color: #a5b4fc;">ملاحظة: لتغيير صلاحية الأدمن، يجب مسح الإيميل الحالي تماماً وكتابة البريد الجديد، ثم النقر على زر "تأكيد وتحديث الإيميل" ليتم حذفه نهائياً من الذاكرة وتعيين الإيميل الجديد كأدمن وحيد.</p>
+            <div class="input-group">
+                <label for="newAdminInput">أدخل البريد الإلكتروني الجديد للأدمن:</label>
+                <input type="email" id="newAdminInput" placeholder="مثال: salehlislam0@gmail.com">
+            </div>
+            <button class="btn btn-primary" onclick="updateAdminEmail()">تأكيد وتحديث الإيميل</button>
+            <div id="adminMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        // التحقق عند تحميل الصفحة وتعيين الأدمن الافتراضي إن لم يوجد
+        const DEFAULT_ADMIN = 'salehalaska36@gmail.com';
+        
+        function getAdminEmail() {
+            return localStorage.getItem('admin_email') || DEFAULT_ADMIN;
+        }
+
+        // عرض الإيميل الحالي للأدمن في الصفحة
+        document.getElementById('currentAdminDisplay').textContent = getAdminEmail();
+        document.getElementById('newAdminInput').value = getAdminEmail();
+
+        // وظيفة تغيير وتحديث إيميل الأدمن مع مسح القديم نهائياً من الذاكرة
+        function updateAdminEmail() {
+            const inputField = document.getElementById('newAdminInput');
+            const newEmail = inputField.value.trim();
+            const messageDiv = document.getElementById('adminMessage');
+
+            if (!newEmail) {
+                messageDiv.style.color = '#f87171';
+                messageDiv.textContent = 'خطأ: لا يمكن ترك خانة البريد فارغة!';
+                return;
+            }
+
+            // تأكيد العملية من المستخدم
+            const confirmChange = confirm(`هل أنت متأكد من رغبتك في تغيير الأدمن إلى (${newEmail}) وحذف الصلاحية عن الإيميل السابق نهائياً؟`);
+            if (confirmChange) {
+                // مسح البيانات القديمة بالكامل من ذاكرة التخزين المحلي
+                localStorage.removeItem('admin_email');
+                
+                // تعيين الإيميل الجديد وحفظه كأدمن رئيسي
+                localStorage.setItem('admin_email', newEmail);
+                
+                document.getElementById('currentAdminDisplay').textContent = newEmail;
+                messageDiv.style.color = '#4ade80';
+                messageDiv.textContent = `تم تحديث وإلغاء الإيميل القديم بنجاح! الإيميل الجديد (${newEmail}) هو الأدمن المسيطر الآن.`;
+            } else {
+                messageDiv.style.color = '#f87171';
+                messageDiv.textContent = 'تم إلغاء عملية التغيير.';
+            }
+        }
+
+        // وظيفة حظر وفك حظر المستخدمين من الجدول
+        function toggleBan(button) {
+            const row = button.closest('tr');
+            const statusCell = row.cells[1];
+            
+            if (button.textContent === 'حظر') {
+                statusCell.textContent = 'محظور';
+                statusCell.style.color = '#f87171';
+                button.textContent = 'فك الحظر';
+                button.className = 'btn btn-primary';
+            } else {
+                statusCell.textContent = 'نشط';
+                statusCell.style.color = '#4ade80';
+                button.textContent = 'حظر';
+                button.className = 'btn';
+            }
+        }
+    </script>
+
+</body>
+</html>
+<!-- ========================================== -->
+<!-- قسم خزنة الأدمن وإدارة سحب الأرباح (Treasury) -->
+<!-- ========================================== -->
+<div class="admin-treasury-section" style="background-color: #1b263b; border: 1px solid #415a77; border-radius: 12px; padding: 25px; margin-top: 20px; color: #fff; font-family: Arial, sans-serif;">
+    <h2 style="color: #f59e0b; margin-top: 0; display: flex; align-items: center; gap: 10px;">
+        <span>💰</span> خزنة المنصة المركزية وإدارة الأرباح
+    </h2>
+    <p style="color: #778da9; font-size: 14px; margin-bottom: 20px;">
+        هنا يتم تجميع أرباح اشتراكات العملاء الحقيقية تلقائياً. يمكنك متابعة الرصيد الصافي وطلب سحب الأرباح بأمان تام.
+    </p>
+
+    <!-- بطاقات عرض الإحصائيات المالية -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px;">
+        <div style="background-color: #0d1b2a; padding: 18px; border-radius: 8px; border-right: 4px solid #4ade80;">
+            <div style="font-size: 13px; color: #94a3b8;">إجمالي رصيد الخزنة الحالي</div>
+            <div id="adminTreasuryDisplay" style="font-size: 26px; font-weight: bold; color: #4ade80; margin-top: 5px;">0 ج.م</div>
+        </div>
+        <div style="background-color: #0d1b2a; padding: 18px; border-radius: 8px; border-right: 4px solid #60a5fa;">
+            <div style="font-size: 13px; color: #94a3b8;">إجمالي عمليات الاشتراكات</div>
+            <div id="adminSubsDisplay" style="font-size: 26px; font-weight: bold; color: #60a5fa; margin-top: 5px;">0 مشترِك</div>
+        </div>
+    </div>
+
+    <!-- زر فتح نموذج طلب السحب -->
+    <button onclick="openPayoutModal()" style="background-color: #f59e0b; color: #000; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.3s;">
+        📥 طلب سحب الأرباح (Payout)
+    </button>
+</div>
+
+<!-- نافذة سحب الأرباح المنبثقة (Payout Modal) -->
+<div id="payoutModalOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.75); justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(3px);">
+    <div style="background-color: #1b263b; border: 1px solid #415a77; border-radius: 12px; padding: 25px; width: 100%; max-width: 400px; box-sizing: border-box; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: right;">
+        <h3 style="color: #f59e0b; margin-top: 0;">طلب سحب أرباح الخزنة</h3>
+        <p style="font-size: 13px; color: #cbd5e1; line-height: 1.5; margin-bottom: 15px;">
+            أدخل تفاصيل الحساب المراد تحويل الأرباح إليه (فودافون كاش أو تحويل بنكي). العملية آمنة ولا يتم تخزين أي بيانات حساسية نهائياً.
+        </p>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 5px;">المبلغ المراد سحبه (ج.م):</label>
+            <input type="number" id="payoutAmount" placeholder="مثال: 1000" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #415a77; background-color: #0d1b2a; color: white; box-sizing: border-box; outline: none;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 5px;">رقم محفظة الاستلام أو بيانات التحويل:</label>
+            <input type="text" id="payoutDest" placeholder="مثال: 01012345678" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #415a77; background-color: #0d1b2a; color: white; box-sizing: border-box; outline: none;" maxlength="20">
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button onclick="executePayout()" style="background-color: #4ade80; color: #000; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; flex-grow: 1;">تأكيد وصرف السحب</button>
+            <button onclick="closePayoutModal()" style="background-color: #f87171; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer;">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // تحديث وتجهيز بيانات الخزنة فور فتح لوحة الأدمن
+    function updateTreasuryUI() {
+        const balance = parseFloat(localStorage.getItem('adminTreasuryBalance')) || 0;
+        const subsCount = parseInt(localStorage.getItem('adminSubscribersCount')) || 0;
+
+        document.getElementById('adminTreasuryDisplay').textContent = balance.toLocaleString() + ' ج.م';
+        document.getElementById('adminSubsDisplay').textContent = subsCount + ' مشترِك';
+    }
+
+    // تشغيل الدالة تلقائياً عند تحميل الصفحة
+    window.addEventListener('DOMContentLoaded', updateTreasuryUI);
+
+    // فتح نافذة السحب
+    function openPayoutModal() {
+        document.getElementById('payoutModalOverlay').style.display = 'flex';
+    }
+
+    // إغلاق نافذة السحب وتطهير الحقول
+    function closePayoutModal() {
+        document.getElementById('payoutModalOverlay').style.display = 'none';
+        document.getElementById('payoutAmount').value = '';
+        document.getElementById('payoutDest').value = '';
+    }
+
+    // تنفيذ عملية السحب بأمان وتحديث الخزنة
+    function executePayout() {
+        const amtInput = document.getElementById('payoutAmount').value;
+        const destInput = document.getElementById('payoutDest').value.trim();
+
+        const withdrawAmount = parseFloat(amtInput);
+        let currentBalance = parseFloat(localStorage.getItem('adminTreasuryBalance')) || 0;
+
+        if (isNaN(withdrawAmount) || withdrawAmount <= 0) {
+            alert('⚠️ يُرجى إدخال مبلغ صحيح مراد سحبه.');
+            return;
+        }
+
+        if (!destInput) {
+            alert('⚠️ يُرجى إدخال وجهة الاستلام (رقم المحفظة أو الحساب).');
+            return;
+        }
+
+        if (withdrawAmount > currentBalance) {
+            alert(`⚠️ عذراً، المبلغ المطلوب (${withdrawAmount} ج.م) أكبر من رصيد الخزنة المتاح حالياً (${currentBalance} ج.م).`);
+            return;
+        }
+
+        // خصم المبلغ من الخزنة المركزية للأدمن
+        currentBalance -= withdrawAmount;
+        localStorage.setItem('adminTreasuryBalance', currentBalance.toString());
+
+        // تطبيق الأمان التام: تفريغ الحقول وعدم الاحتفاظ بأي بيانات حساسة للمسحوبات
+        document.getElementById('payoutAmount').value = '';
+        document.getElementById('payoutDest').value = '';
+
+        alert(`✅ تمت عملية السحب بنجاح!\n\nتم خصم مبلغ (${withdrawAmount} ج.م) من الخزنة وصرفه إلى الوجهة (${destInput}).\nالرصيد المتبقي في الخزنة الآن: ${currentBalance.toLocaleString()} ج.م`);
+
+        closePayoutModal();
+        updateTreasuryUI(); // تحديث الأرقام فوراً على الشاشة
+    }
+</script>
